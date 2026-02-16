@@ -1,51 +1,31 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Inject,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { connectionType } from 'src/Constants/constant';
+import { CreateProductDto } from './dtos/createproduct.dto';
+import { FindProductDto } from './dtos/findpoduct.dto';
+import { UpdateProductDto } from './dtos/updateproduct.dto';
+import { RemoveProductDto } from './dtos/removeproduct.dto';
 
 @Controller('product')
 export class ProductController {
-  constructor(
-    private readonly productService: ProductService,
-    @Inject('CONNECTION') private readonly connection: connectionType,
-  ) {
-    console.log(
-      `THIS IS CONNECTION STRING ${this.connection.Connection_String}`,
-    );
-  }
-
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
-  }
-
+  constructor(private readonly productService: ProductService) {}
   @Get()
   findAll() {
-    return this.productService.findAll();
+    console.log('find all products');
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  @Get('/:id')
+  findOne(@Param() findProductDto: FindProductDto) {
+    console.log(findProductDto.id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @Post()
+  create(@Body() createProductDto: CreateProductDto) {
+    console.log('create product');
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  @Get('/:id')
+  update(@Param() updateProductDto: UpdateProductDto) {
+    console.log(updateProductDto.id);
+  }
+  @Get('/:id')
+  remove(@Param() removeProductDto: RemoveProductDto) {
+    console.log(removeProductDto.id);
   }
 }

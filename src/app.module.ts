@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { User } from './Entity/User.entity';
 import { Product } from './Entity/Product.entity';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { UserModule } from './user/user.module';
     //   synchronize: true,
     // }),
     UserModule,
+    AuthModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

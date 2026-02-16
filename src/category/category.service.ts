@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dtos/createproduct.dto';
 
 @Injectable()
-export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    console.log(createProductDto);
+export class CategoryService {
+  create() {
+    console.log('create category');
   }
   findAll() {
-    console.log('find all products');
+    console.log('find all categories');
   }
-
   findOne(id: number) {
     console.log(id);
   }

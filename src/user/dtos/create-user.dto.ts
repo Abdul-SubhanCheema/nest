@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsString,
@@ -29,4 +30,7 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   role: string;
+  @IsNotEmpty()
+  @Type(() => Date)
+  createdAt: Date;
 }
