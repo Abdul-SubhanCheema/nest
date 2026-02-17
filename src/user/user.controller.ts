@@ -10,11 +10,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
   private createUser(@Body() createUserDto: CreateUserDto) {
-    this.userService.createUser(createUserDto);
+    return this.userService.createUser(createUserDto);
   }
   @Get()
   private findAll() {
-    this.userService.findAll();
+    return this.userService.findAll();
   }
 
   @Get('/:id')

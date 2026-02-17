@@ -18,7 +18,7 @@ export class ProductController {
   }
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
-    console.log('create product');
+    return this.productService.create(createProductDto);
   }
   @Get('/:id')
   update(@Param() updateProductDto: UpdateProductDto) {

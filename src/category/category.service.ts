@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { CreateCategoryDto } from './dtos/createcategory.dto';
 
 @Injectable()
 export class CategoryService {
-  create() {
+  create(createCategoryDto: CreateCategoryDto) {
     console.log('create category');
   }
   findAll() {

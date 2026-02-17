@@ -6,8 +6,8 @@ import { LoggerMiddleware } from './Middleware/logger/logger.middleware';
 import { ConfigService } from './Providers/ConfigService';
 import { Type } from 'class-transformer';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
-import { User } from './Entity/User.entity';
-import { Product } from './Entity/Product.entity';
+import { User } from 'src/user/entity/user.entity';
+import { Product } from 'src/product/entity/product.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
@@ -15,16 +15,20 @@ import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     ProductModule,
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: 'localhost',
-    //   port: 5432,
-    //   username: 'postgres',
-    //   password: 'root',
-    //   database: 'nest-fundamentals',
-    //   entities: [User, Product],
-    //   synchronize: true,
-    // }),
+    TypeOrmModule.forRootAsync({
+      inject: [],
+      imports: [],
+      useFactory: () => ({
+        type: 'postgres',
+        host: 'localhost',
+        port: 5432,
+        username: 'postgres',
+        password: 'Mtbc@19283$',
+        database: 'NEST-POS',
+        entities: [User, Product],
+        synchronize: true,
+      }),
+    }),
     UserModule,
     AuthModule,
     CategoryModule,
