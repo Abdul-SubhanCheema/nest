@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from 'src/category/entity/category.entity';
+import { User } from 'src/user/entity/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
@@ -22,4 +30,15 @@ export class Product {
   createdAt: Date;
   @Column()
   quantity: number;
+  @ManyToOne(() => Category, (category) => category.products)
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
+  @Column()
+  categoryId: number;
+
+  @ManyToOne(() => User, (user) => user.products)
+  @JoinColumn({ name: 'userId' })
+  user: User;
+  @Column()
+  userId: number;
 }

@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from 'src/category/entity/category.entity';
+import { Product } from 'src/product/entity/product.entity';
+import { Sale } from 'src/sale/entity/sale.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -21,4 +24,12 @@ export class User {
   role: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+  @OneToMany(() => Category, (category) => category.user)
+  categories: Category[];
+
+  @OneToMany(() => Sale, (sale) => sale.user)
+  sales: Sale[];
+
+  @OneToMany(() => Product, (product) => product.user)
+  products: Product[];
 }

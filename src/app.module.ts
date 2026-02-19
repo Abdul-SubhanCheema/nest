@@ -11,6 +11,8 @@ import { Product } from 'src/product/entity/product.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
+import { CustomerModule } from './customer/customer.module';
+import { SaleModule } from './sale/sale.module';
 
 @Module({
   imports: [
@@ -25,13 +27,16 @@ import { CategoryModule } from './category/category.module';
         username: 'postgres',
         password: 'Mtbc@19283$',
         database: 'NEST-POS',
-        entities: [User, Product],
+        // entities: [User, Product],
+        autoLoadEntities: true,
         synchronize: true,
       }),
     }),
     UserModule,
     AuthModule,
     CategoryModule,
+    CustomerModule,
+    SaleModule,
   ],
   controllers: [AppController],
   providers: [
