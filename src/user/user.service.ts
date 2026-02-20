@@ -4,10 +4,14 @@ import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
+
+    private readonly configservice:ConfigService,
+
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
     @InjectRepository(User)
@@ -22,6 +26,9 @@ export class UserService {
     return newUser;
   }
   findAll() {
+    const environment=this.configservice.get<string>('POSTGRESQL')
+    console.log(environment);
+    
     console.log('find all users');
   }
   findOne(id: number) {

@@ -1,9 +1,11 @@
 import { Category } from 'src/category/entity/category.entity';
+import { Sale } from 'src/sale/entity/sale.entity';
 import { User } from 'src/user/entity/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -41,4 +43,8 @@ export class Product {
   user: User;
   @Column()
   userId: number;
+
+
+  @ManyToMany(()=>Sale,(sale)=>sale.products)
+  sales:Sale[];
 }
