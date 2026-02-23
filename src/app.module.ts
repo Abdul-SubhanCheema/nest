@@ -4,10 +4,7 @@ import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
 import { LoggerMiddleware } from './Middleware/logger/logger.middleware';
 import { ConfigService } from '@nestjs/config';
-import { Type } from 'class-transformer';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
-import { User } from 'src/user/entity/user.entity';
-import { Product } from 'src/product/entity/product.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
@@ -21,6 +18,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 @Module({
   imports: [
     ProductModule,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -29,24 +27,39 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+        const dbType = (configService.get<string>('DATABASE_TYPE') ??
+          'postgres') as 'postgres';
+        const dbHost =
+          configService.get<string>('DATABASE_HOST') ?? 'localhost';
+
+        const dbPort = Number(
+          configService.get<string>('DATABASE_PORT') ?? '5432',
+        );
+        const dbUsername =
+          configService.get<string>('DATABASE_USERNAME') ?? 'postgres';
+        const dbPassword = configService.get<string>('DATABASE_PASSWORD') ?? '';
+        const dbName = configService.get<string>('DATABASE') ?? 'test';
+
         console.log('DB Config:', {
-          type: configService.get('DATABASE_TYPE'),
-          host: configService.get('DATABASE_HOST'),
-          port: configService.get('DATABASE_PORT'),
-          username: configService.get('DATABASE_USERNAME'),
-          password: configService.get('DATABASE_PASSWORD'),
-          database: configService.get('DATABASE'),
+          type: dbType,
+          host: dbHost,
+          port: dbPort,
+          username: dbUsername,
+          password: dbPassword,
+          database: dbName,
         });
         return {
-          type: configService.get<'postgres'>('DATABASE_TYPE'), // literal type
-          host: configService.get<string>('DATABASE_HOST'),
-          port: Number(configService.get('DATABASE_PORT')),
-          username: configService.get<string>('DATABASE_USERNAME'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE'),
+          type: dbType,
+          host: dbHost,
+          port: dbPort,
+          username: dbUsername,
+          password: dbPassword,
+          database: dbName,
           autoLoadEntities: true,
           synchronize: true,
         };
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
       },
     }),
     UserModule,
@@ -56,13 +69,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
     SaleModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: ConfigService,
-      useClass: ConfigService,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
