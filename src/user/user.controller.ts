@@ -4,6 +4,7 @@ import { FindUserParamDto } from './dtos/finduser-param.dto';
 import { UserService } from './user.service';
 import { UpdateUserParamDto } from './dtos/updateuser-param.dto';
 import { RemoveUserParamDto } from './dtos/removeuser-param.dto';
+import { CreateManyUsersDto } from './dtos/create-many-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,5 +29,9 @@ export class UserController {
   @Post(':id')
   private remove(@Param() removeUserParamDto: RemoveUserParamDto) {
     console.log(removeUserParamDto.id);
+  }
+  @Post('/many')
+  private createMany(@Body() createManyUsersDto: CreateManyUsersDto) {
+    return this.userService.createMany(createManyUsersDto);
   }
 }

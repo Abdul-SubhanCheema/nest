@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dtos/createproduct.dto';
 import { Product } from './entity/product.entity';
 import { Repository } from 'typeorm/repository/Repository';
@@ -11,19 +15,61 @@ export class ProductService {
     private productRepository: Repository<Product>,
   ) {}
   async create(createProductDto: CreateProductDto) {
-    const product = this.productRepository.findOne({
-      where: { name: createProductDto.name },
-    });
+    let existingProduct: Product | null = null;
+
+    try {
+      existingProduct = await this.productRepository.findOne({
+        where: { name: createProductDto.name },
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request try again later',
+        {
+          description: 'Error connecting to database',
+        },
+      );
+    }
+    if (existingProduct) {
+      throw new BadRequestException('Product with same name Alreay exists');
+    }
+
     let newProduct = this.productRepository.create(createProductDto);
-    newProduct = await this.productRepository.save(newProduct);
+
+    try {
+      newProduct = await this.productRepository.save(newProduct);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request try again later',
+        {
+          description: 'Error connecting to database',
+        },
+      );
+    }
+
     return newProduct;
   }
   findAll() {
     console.log('find all products');
   }
 
-  findOne(id: number) {
-    console.log(id);
+  async findOne(id: number) {
+    let product: Product | null = null;
+    try {
+      product = await this.productRepository.findOneBy({
+        id,
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request try again later',
+        {
+          description: 'Error connecting to database',
+        },
+      );
+    }
+    if (!product) {
+      throw new BadRequestException('Product with this id not exist');
+    }
+    return product;
   }
   update(id: number) {
     console.log(id);
