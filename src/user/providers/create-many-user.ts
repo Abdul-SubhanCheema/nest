@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable no-unsafe-finally */
 import { DataSource } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../entity/user.entity';
@@ -7,7 +12,7 @@ import { ConflictException, RequestTimeoutException } from '@nestjs/common';
 export class CreateManyUserService {
   constructor(private readonly datasource: DataSource) {}
   async createMany(createManyUsersDtos: CreateManyUsersDto) {
-    let newUsers: User[] = [];
+    const newUsers: User[] = [];
     const queryRunner = this.datasource.createQueryRunner();
     try {
       await queryRunner.connect();
@@ -22,9 +27,9 @@ export class CreateManyUserService {
     }
 
     try {
-      for (let user of createManyUsersDtos.users) {
-        let newUser = queryRunner.manager.create(User, user);
-        let result = await queryRunner.manager.save(newUser);
+      for (const user of createManyUsersDtos.users) {
+        const newUser = queryRunner.manager.create(User, user);
+        const result = await queryRunner.manager.save(newUser);
         newUsers.push(result);
       }
       await queryRunner.commitTransaction();

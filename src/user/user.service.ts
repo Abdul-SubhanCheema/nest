@@ -11,9 +11,10 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { of } from 'rxjs';
+
 import { CreateManyUserService } from './providers/create-many-user';
 import { CreateManyUsersDto } from './dtos/create-many-user.dto';
+import { CreateuserProvider } from './providers/createuser.provider';
 
 @Injectable()
 export class UserService {
@@ -27,41 +28,12 @@ export class UserService {
 
     private readonly datasource: DataSource,
     private readonly createManyUserService: CreateManyUserService,
+
+    private readonly createUserProvider: CreateuserProvider,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
-    let existingUser: User | null = null;
-    try {
-      existingUser = await this.userRepository.findOne({
-        where: { username: createUserDto.username },
-      });
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process your request try again later',
-        {
-          description: 'Error connecting to database',
-        },
-      );
-    }
-    if (existingUser) {
-      throw new BadRequestException(
-        'User already exists. Try using another one.',
-      );
-    }
-
-    let newUser = this.userRepository.create(createUserDto);
-
-    try {
-      newUser = await this.userRepository.save(newUser);
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process your request try again later',
-        {
-          description: 'Error connecting to database',
-        },
-      );
-    }
-    return newUser;
+  public async createUser(createUserDto: CreateUserDto) {
+    return this.createUserProvider.createUser(createUserDto);
   }
   findAll() {
     const environment = this.configservice.get<string>('POSTGRESQL');

@@ -12,7 +12,7 @@ import { CustomerModule } from './customer/customer.module';
 import { SaleModule } from './sale/sale.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AppConfig } from './Config/app.config'; 
+import { AppConfig } from './Config/app.config';
 import databaseConfig from './Config/database.config';
 import envValidations from './Config/env.validations';
 
@@ -21,18 +21,17 @@ import envValidations from './Config/env.validations';
 @Module({
   imports: [
     ProductModule,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load:[AppConfig,databaseConfig],
-      validationSchema:envValidations
+      load: [AppConfig, databaseConfig],
+      validationSchema: envValidations,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-       
         const dbType = (configService.get<string>('database.type') ??
           'postgres') as 'postgres';
         const dbHost =
@@ -45,8 +44,10 @@ import envValidations from './Config/env.validations';
           configService.get<string>('database.username') ?? 'postgres';
         const dbPassword = configService.get<string>('database.password') ?? '';
         const dbName = configService.get<string>('database.database') ?? 'test';
-        const dbautoload=configService.get('database.autoLoadEntities');
-        const dbsync=configService.get('database.synchronize');
+        const dbautoload = configService.get<boolean>(
+          'database.autoLoadEntities',
+        );
+        const dbsync = configService.get<boolean>('database.synchronize');
 
         console.log('DB Config:', {
           type: dbType,
@@ -66,7 +67,6 @@ import envValidations from './Config/env.validations';
           autoLoadEntities: dbautoload,
           synchronize: dbsync,
         };
-    
       },
     }),
     UserModule,
