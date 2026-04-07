@@ -15,6 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { CreateManyUserService } from './providers/create-many-user';
 import { CreateManyUsersDto } from './dtos/create-many-user.dto';
 import { CreateuserProvider } from './providers/createuser.provider';
+import { FindUserByUsernameProvider } from './providers/find-user-by-username.provider';
 
 @Injectable()
 export class UserService {
@@ -30,6 +31,7 @@ export class UserService {
     private readonly createManyUserService: CreateManyUserService,
 
     private readonly createUserProvider: CreateuserProvider,
+    private readonly findUserByUsernameProvider: FindUserByUsernameProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -70,5 +72,8 @@ export class UserService {
 
   async createMany(createManyUsersDtos: CreateManyUsersDto) {
     return this.createManyUserService.createMany(createManyUsersDtos);
+  }
+  async FindByUsername(username: string) {
+   return await this.findUserByUsernameProvider.findByUsername(username);
   }
 }

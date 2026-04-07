@@ -15,6 +15,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppConfig } from './Config/app.config';
 import databaseConfig from './Config/database.config';
 import envValidations from './Config/env.validations';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 
 // const ENV = process.env.NODE_ENV;
 
@@ -76,7 +77,12 @@ import envValidations from './Config/env.validations';
     SaleModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthenticationGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
