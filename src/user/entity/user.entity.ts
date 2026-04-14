@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Category } from 'src/category/entity/category.entity';
 import { Product } from 'src/product/entity/product.entity';
 import { Sale } from 'src/sale/entity/sale.entity';
@@ -6,30 +7,44 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
   @Column({
     type: 'varchar',
     length: 20,
     unique: true,
+    nullable: false,
   })
-  username: string;
+  username!: string;
   @Column({
     type: 'varchar',
     length: 20,
   })
-  password: string;
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable:true
+  })
+  @Exclude()
+  password?: string;
+  @Column({
+    type: 'varchar',
+    nullable:true
+  })
+  @Exclude()
+  googleId?: string;
+
   @Column({ default: true })
-  isActive: boolean;
+  isActive!: boolean;
   @Column()
-  role: string;
+  role!: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  createdAt!: Date;
   @OneToMany(() => Category, (category) => category.user)
-  categories: Category[];
+  categories!: Category[];
 
   @OneToMany(() => Sale, (sale) => sale.user)
-  sales: Sale[];
+  sales!: Sale[];
 
   @OneToMany(() => Product, (product) => product.user)
-  products: Product[];
+  products!: Product[];
 }

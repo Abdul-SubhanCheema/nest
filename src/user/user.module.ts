@@ -10,10 +10,12 @@ import { FindUserByUsernameProvider } from './providers/find-user-by-username.pr
 import jwtConfig from 'src/Config/jwt.config';
 import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
 import { ConfigModule } from '@nestjs/config/dist/config.module';
+import { FindOneByGoogleid } from 'src/auth/providers/find-one-by-googleid';
+import { CreateGoogleUserProvider } from './providers/create-google-user.provider';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, CreateManyUserService, CreateuserProvider,  FindUserByUsernameProvider],
+  providers: [UserService, CreateManyUserService, CreateuserProvider,  FindUserByUsernameProvider, FindOneByGoogleid, CreateGoogleUserProvider],
   exports: [UserService],
   imports: [forwardRef(() => AuthModule), TypeOrmModule.forFeature([User]),
   ConfigModule.forFeature(jwtConfig),JwtModule.registerAsync(jwtConfig.asProvider())],

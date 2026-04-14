@@ -13,5 +13,10 @@ export default Joi.object({
   JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
   JWT_TOKEN_AUDIENCE: Joi.string().required(),
   JWT_TOKEN_ISSUER: Joi.string().required(),
-
+  GOOGLE_CLIENT_ID: Joi.string().required(),  
+  GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  API_VERSION: Joi.string().required().default('v1'),
+  MAIL_HOST: Joi.string().required(),
+  MAIL_USERNAME: Joi.string().required(),
+  MAIL_PASSWORD: Joi.string().required(),
 });

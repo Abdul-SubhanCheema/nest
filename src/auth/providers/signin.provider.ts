@@ -24,6 +24,13 @@ export class SigninProvider {
     async SignIn(signInDto: SignInDto) {
         let user = await this.userService.FindByUsername(signInDto.username);
 
+        // Check if user has a password (not a Google OAuth user)
+        if (!user.password) {
+            throw new UnauthorizedException('Invalid credentials', {
+                description: 'This account uses Google Sign-In. Please use Google authentication.',
+            });
+        }
+
         let isEqual: boolean = false;
         try {
            isEqual= await this.hashingprovider.comparePassword(signInDto.password, user.password); 

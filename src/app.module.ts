@@ -12,10 +12,12 @@ import { CustomerModule } from './customer/customer.module';
 import { SaleModule } from './sale/sale.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AppConfig } from './Config/app.config';
+import appConfig from './Config/app.config';
 import databaseConfig from './Config/database.config';
 import envValidations from './Config/env.validations';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
+import { DataInterceptorInterceptor } from './common/interceptors/data-interceptor/data-interceptor.interceptor';
+import { MailModule } from './mail/mail.module';
 
 // const ENV = process.env.NODE_ENV;
 
@@ -26,7 +28,7 @@ import { AuthenticationGuard } from './auth/guards/authentication/authentication
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [AppConfig, databaseConfig],
+      load: [appConfig, databaseConfig],
       validationSchema: envValidations,
     }),
     TypeOrmModule.forRootAsync({
@@ -75,6 +77,7 @@ import { AuthenticationGuard } from './auth/guards/authentication/authentication
     CategoryModule,
     CustomerModule,
     SaleModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService,
@@ -82,6 +85,10 @@ import { AuthenticationGuard } from './auth/guards/authentication/authentication
       provide: 'APP_GUARD',
       useClass: AuthenticationGuard,
     },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: DataInterceptorInterceptor,
+    }
   ],
 })
 export class AppModule implements NestModule {

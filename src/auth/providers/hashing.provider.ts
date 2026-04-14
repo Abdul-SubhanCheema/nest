@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export abstract class HashingProvider {
   abstract hashPassword(password: string | Buffer): Promise<string>;
   abstract comparePassword(
-    password: string | Buffer,
+    password: string | Buffer ,
     hashedPassword: string,
   ): Promise<boolean>;
 }

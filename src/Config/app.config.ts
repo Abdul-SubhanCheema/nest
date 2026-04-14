@@ -1,4 +1,9 @@
-export const AppConfig = () => ({
+import { registerAs } from "@nestjs/config";
+
+export default registerAs('appConfig', () => ({
   environment: process.env.NODE_ENV || 'production',
-  
-});
+  apiVersion: process.env.API_VERSION || 'v1',
+  mailHost: process.env.MAIL_HOST,
+  mailUsername: process.env.MAIL_USERNAME,
+  mailPassword: process.env.MAIL_PASSWORD,
+}));
